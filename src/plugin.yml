@@ -3,7 +3,6 @@ main: com.licrafter.inviteCode.InviteCode
 version: 1.0.0
 description: give player inviteCode by key
 author: shell
-softdepend: [PlayerPoints]
 commands:
   invite:
     description: base command
