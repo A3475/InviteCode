@@ -1,0 +1,36 @@
+setting:
+  #指令列表标题
+  title: "xxx服务器邀请码系统"
+  #邀请码的最长长度
+  key_length: 10
+  #当玩家登录的时候是否要显示自己的邀请记录
+  login_show: true
+  #是否检查被邀请者和邀请者的ip,如果相同禁止邀请(目前这个功能不严谨,作用不大)
+  check_ip: false
+  #当被邀请的玩家第一次进服务器的时候是否全服广播
+  broadcast: true
+  #当被邀请的玩家第一次进入服务器的时候全服广播的消息
+  message:
+  - '&a玩家 %invite% 邀请 %player% 加入到服务器大家热烈欢迎'
+  #是否邀请人和被邀请人都给予奖励
+  reward_both: true
+  #邀请一个玩家邀请人能够得到的奖品
+  #格式(- 物品id 数量)
+  #reward:
+  #  item:
+  #  - 1,2
+  #  - 35,10
+  #  money: 10
+  reward:
+    item:
+    - 1,10
+    - 2,20
+    money: 100
+  #被邀请人应该得到多奖励
+  #如果reward_both: false 则下面所设置多奖励不会给被邀请人
+  #反之会给予被邀请人
+  reward_another:
+    item:
+    - 1,1
+    - 2,2
+    money: 10
