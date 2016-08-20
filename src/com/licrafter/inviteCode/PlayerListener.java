@@ -22,6 +22,14 @@ public class PlayerListener implements Listener {
         if (show) {
             plugin.getServer().dispatchCommand(event.getPlayer(), "invite me");
         }
+        Calendar cld = Calendar.getInstance();
+        int year = cld.get(Calendar.YEAR);// 当前年数
+        int month = cld.get(Calendar.MONTH);// 当前月数
+        int day = cld.get(Calendar.DAY_OF_MONTH);// 当前天数
+        Player player=event.getPlayer();
+        if (Plugin.getConfig().get("PlayerInviteTime."+player.getName())-getTotal(year, month, day)>=1){
+            Plugin.getConfig().set("PlayerInviteData."+player.getName(),Plugin.getConfig().getInt("PlayerInviteData."+player.getName())+1);
+            Plugin.getConfig().set("PlayerInviteTime."+player.getName(),getTotal(year, month, day));
+        }
     }
-
 }
