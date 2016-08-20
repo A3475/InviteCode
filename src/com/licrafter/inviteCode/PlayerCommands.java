@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -64,7 +65,13 @@ public class PlayerCommands implements CommandExecutor {
                         return true;
                     }
                     if (plugin.addFriend(player.getName(), code)) {
-                        player.sendMessage(ChatColor.AQUA + "[邀请码]你已经接受邀请");
+                        plugin.getConfig().set("PlayerInviteData."+player.getName(),0);        
+                        Calendar cld = Calendar.getInstance();
+                        int year = cld.get(Calendar.YEAR);// 当前年数
+                        int month = cld.get(Calendar.MONTH);// 当前月数
+                        int day = cld.get(Calendar.DAY_OF_MONTH);// 当前天数
+                        plugin.getConfig().set("PlayerInviteTime."+player.getName(),getTotal(year, month, day));
+                        player.sendMessage(ChatColor.AQUA + "[邀请码]你已经接受邀请,请登录2天后双方才能接受");
                         //是否全局发送消息
                         if (plugin.getIsBroadCast()) {
                             plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&'
@@ -154,7 +161,49 @@ public class PlayerCommands implements CommandExecutor {
             plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), "eco give " + player + " " + money);
         }
     }
-
+    public static boolean isNotPrimeYear(int year) {
+        return year % 4 == 0 && (year % 400 == 0 || year % 100 != 0);
+    }
+ 
+    /**
+     * getDayOfMonth TODO 返回当月多少天
+     * 
+     * @param year
+     *            年份
+     * @param month
+     *            月份
+     * @return int
+     */
+    public static int getDayOfMonth(int year, int month) {
+        int[] days = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        return isNotPrimeYear(year) && month == 2 ? days[month] + 1
+                : days[month];
+    }
+ 
+    /**
+     * getTotal TODO 计算现在到1970的所有天数
+     * 
+     * @param year
+     *            当前年份
+     * @param month
+     *            当前月份
+     * @param day
+     *            当前天数
+     * @return long
+     */
+    public static long getTotal(int year, int month, int day) {
+        long sum = 0;
+        for (int index = 1970; index < year; index++) {
+            sum += 265;
+            if (isNotPrimeYear(index))
+                sum++;
+        }
+        for (int index = 0; index < month; index++) {
+            sum += getDayOfMonth(year, index);
+        }
+ 
+        return sum + day;
+    }
     private void reward(String player) {
         List<String> rewards = plugin.getConfig().getStringList("setting.reward.item");
         for (String reward : rewards) {
