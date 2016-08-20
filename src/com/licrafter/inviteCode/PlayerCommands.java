@@ -71,7 +71,7 @@ public class PlayerCommands implements CommandExecutor {
                         int month = cld.get(Calendar.MONTH);// 当前月数
                         int day = cld.get(Calendar.DAY_OF_MONTH);// 当前天数
                         plugin.getConfig().set("PlayerInviteTime."+player.getName(),getTotal(year, month, day));
-                        player.sendMessage(ChatColor.AQUA + "[邀请码]你已经接受邀请,请登录2天后双方才能接受");
+                        player.sendMessage(ChatColor.AQUA + "[邀请码]你已经接受邀请,请登录2天后双方才能得到邀请奖励");
                         //是否全局发送消息
                         if (plugin.getIsBroadCast()) {
                             plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&'
@@ -79,10 +79,8 @@ public class PlayerCommands implements CommandExecutor {
                                             .replaceAll("%player%", player.getName())));
                         }
                         //是否给予被邀请者奖励
-                        if (plugin.isRewardBoth()) {
-                            rewardAnother(player.getName());
-                            player.sendMessage(ChatColor.AQUA + "[邀请码]你已经收到被邀请的奖励");
-                        }
+                        /*
+                        */
                         //增加这个邀请码的邀请人的奖品个数
                         plugin.addRewardCount(code);
                     } else {
@@ -118,6 +116,12 @@ public class PlayerCommands implements CommandExecutor {
             } else {
                 player.sendMessage(ChatColor.AQUA + "[邀请码]你银行里的邀请奖励是空气~~,继续努力宣传服务器吧!");
             }
+            if (getConfig().contains("PlayerInviteData."+player.getName())){
+                if (plugin.isRewardBoth()&&Plugin.getConfig().getInt("PlayerInviteData."+player.getName())>=2) {
+                    rewardAnother(player.getName());
+                    player.sendMessage(ChatColor.AQUA + "[邀请码]你已经收到被邀请的奖励");
+                }
+            }
             return true;
         }
 
@@ -125,7 +129,7 @@ public class PlayerCommands implements CommandExecutor {
         player.sendMessage(ChatColor.GREEN + "/invite code     " + ChatColor.GRAY + "- 生成唯一的邀请码");
         player.sendMessage(ChatColor.GREEN + "/invite confirm [邀请码]     " + ChatColor.GRAY + "- 被邀请人确认被邀请");
         player.sendMessage(ChatColor.GREEN + "/invite me     " + ChatColor.GRAY + "- 查看自己邀请的朋友记录");
-        player.sendMessage(ChatColor.GREEN + "/invite reward     " + ChatColor.GRAY + "- 取出自己邀请朋友得到的奖励");
+        player.sendMessage(ChatColor.GREEN + "/invite reward     " + ChatColor.GRAY + "- 取出自己邀请朋友/接受邀请得到的奖励");
         return true;
     }
 
@@ -180,17 +184,6 @@ public class PlayerCommands implements CommandExecutor {
                 : days[month];
     }
  
-    /**
-     * getTotal TODO 计算现在到1970的所有天数
-     * 
-     * @param year
-     *            当前年份
-     * @param month
-     *            当前月份
-     * @param day
-     *            当前天数
-     * @return long
-     */
     public static long getTotal(int year, int month, int day) {
         long sum = 0;
         for (int index = 1970; index < year; index++) {
