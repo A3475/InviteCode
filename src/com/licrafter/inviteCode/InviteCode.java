@@ -53,6 +53,7 @@ public class InviteCode extends JavaPlugin {
         super.onDisable();
         dataConfiguration.saveDataConfig();
         rewardConfiguration.saveDataConfig();
+		saveConfig();
     }
 
 
